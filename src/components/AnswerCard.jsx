@@ -33,7 +33,10 @@ const AnswerCard = ({ answer }) => {
         <Grid item xs={12} md={6} sx={{ textAlign: "end" }}>
           <ReactTimeAgo date={answer.createdDate} />
         </Grid>
+        {/* For implementation */}
+        {/* Hard Coded Comment Sample */}
         <Grid item xs={12}>
+          {/* 
           <Paper
             elevation={0}
             sx={{
@@ -43,7 +46,8 @@ const AnswerCard = ({ answer }) => {
               background: "rgba(0, 0, 0, .25)",
             }}
           >
-            {/* Hard Coded Comment Sample */}
+
+
             <Grid
               item
               xs={12}
@@ -79,8 +83,9 @@ const AnswerCard = ({ answer }) => {
             >
               Comment 2. Lorem ipsum dolor sit amet consectetur adipisicing
               elit. Numquam, nesciunt?
-            </Grid>
+            </Grid> 
           </Paper>
+            */}
         </Grid>
         <Grid item xs={12}>
           <Box
