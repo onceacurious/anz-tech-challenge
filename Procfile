@@ -1,1 +1,1 @@
-web: yarn start && node server.cjs
+web: yarn start
