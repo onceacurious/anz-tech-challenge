@@ -9,9 +9,7 @@ const RealThing = () => {
   const [comment, setComment] = useState("");
   const { issues, answers } = useContext(AppContext);
 
-  useEffect(() => {
-    console.log(answers);
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <Container maxWidth="lg">
@@ -28,7 +26,7 @@ const RealThing = () => {
                 Answers
               </Typography>
               {answers.map((answer, x) => (
-                <AnswerCard key={answer.id + x} answer={answer} />
+                <AnswerCard key={answer.id + x} answer={answer} index={x} />
               ))}
             </>
           )}

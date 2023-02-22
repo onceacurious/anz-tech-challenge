@@ -5,8 +5,9 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import ReactTimeAgo from "react-timeago";
+import Chip from "@mui/material/Chip";
 
-const AnswerCard = ({ answer }) => {
+const AnswerCard = ({ answer, index }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -22,6 +23,9 @@ const AnswerCard = ({ answer }) => {
       }}
     >
       <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Chip color="primary" label={`ANSWER: ${index + 1}`} />
+        </Grid>
         <Grid item xs={12}>
           <Typography variant="body1" gutterBottom>
             {answer.description}
