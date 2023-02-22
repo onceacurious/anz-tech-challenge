@@ -16,7 +16,6 @@ const pages = ["Summary", "Support", "Chart"];
 
 const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
-  //   const [route, setRoute] = useState("");
   const nav = useNavigate();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -30,7 +29,7 @@ const Navbar = () => {
     const route = e.target.innerText.toLowerCase();
     if (route == "summary") {
       nav("/");
-    } else if (route == "real thing") {
+    } else if (route == "support") {
       nav("support/");
     } else if (route == "chart") {
       nav("graph/");

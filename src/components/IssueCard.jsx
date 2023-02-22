@@ -3,19 +3,17 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
 import ReactTimeAgo from "react-timeago";
 import AppContext from "../helpers/AppContext";
+import TextField from "@mui/material/TextField";
 
 const IssueCard = () => {
   const [issue, setIssue] = useState([]);
   const { issues } = useContext(AppContext);
 
-  useEffect(() => {
-    // setIssue(issues == null ? [] : []);
-  }, []);
+  useEffect(() => {}, []);
+  const ariaLabel = { "aria-label": "description" };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,14 +29,12 @@ const IssueCard = () => {
           sx={{
             marginBlock: "1rem",
             padding: "1rem",
-            background: "rgba(0, 0, 0, .10)",
+            background: "rgba(15, 114, 219, .50)",
           }}
         >
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Stack direction="row" spacing={1}>
-                <Chip color="primary" label="Open" />
-              </Stack>
+              <Chip color="warning" label={`ISSUE ID: ${issues.id}`} />
             </Grid>
             <Grid item xs={12}>
               <Typography variant="h5" gutterBottom>
@@ -97,17 +93,16 @@ const IssueCard = () => {
               <Box
                 component="form"
                 sx={{
-                  "& > :not(style)": { m: 1, width: "100%" },
+                  "& > :not(style)": {
+                    // width: 500,
+                    maxWidth: "100%",
+                  },
                 }}
                 noValidate
                 autoComplete="off"
                 onSubmit={handleSubmit}
               >
-                <TextField
-                  id="standard-basic"
-                  label="Add Comment"
-                  variant="standard"
-                />
+                <TextField fullWidth label="Add Comment" id="fullWidth" />
               </Box>
             </Grid>
           </Grid>
