@@ -16,9 +16,3 @@ body {
 a {
   text-decoration: none;
 }
-
-li,
-ul {
-  list-style: none;
-  list-style-type: none;
-}
