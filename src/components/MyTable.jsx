@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
@@ -19,27 +19,33 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 
-import issue from "../../data.json";
+import AppContext from "../helpers/AppContext";
+import data from "../../data.json";
 
-function createData(division, issue_id, status, overdue, dateraised, text) {
+function createData(division, issue_id, status, overdue, dateraised, subject) {
   return {
     division,
     issue_id,
     status,
     overdue,
     dateraised,
-    text,
+    subject,
   };
 }
 
 function Row({ row }) {
   const [open, setOpen] = useState(false);
+  const { setIssues, setAnswers } = useContext(AppContext);
 
   const nav = useNavigate();
 
   const handleEdit = (e) => {
-    console.log(e);
-    nav("real-thing/");
+    nav("support/");
+    setIssues(e);
+
+    var answer = data.answer.filter((a) => a.issueId == e?.id);
+    setAnswers(answer);
+    // console.log(answer);
   };
 
   return (
@@ -76,14 +82,14 @@ function Row({ row }) {
                     Issue
                   </Typography>
                 </Grid>
-                <Grid item xs={12} md={6} lg={10}>
-                  <Typography>{row.text}</Typography>
+                <Grid item xs={10}>
+                  <Typography>{row.subject}</Typography>
                 </Grid>
-                <Grid item xs={12} md={6} lg={2} sx={{ textAlign: "right" }}>
+                <Grid item xs={2} sx={{ textAlign: "right" }}>
                   <Button
                     variant="outlined"
                     startIcon={<BorderColorIcon />}
-                    onClick={() => handleEdit(row.id)}
+                    onClick={() => handleEdit(row)}
                   >
                     Edit
                   </Button>
@@ -102,14 +108,14 @@ Row.propTypes = {
     id: PropTypes.number.isRequired,
     overdue: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
+    subject: PropTypes.string.isRequired,
     division: PropTypes.string.isRequired,
     dateraised: PropTypes.string.isRequired,
   }).isRequired,
 };
 
-const MyTable = () => {
-  const [issues, setIssues] = useState(issue.issue);
+const MyTable = ({ tableData }) => {
+  const [issues, setIssues] = useState(tableData);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -123,8 +129,8 @@ const MyTable = () => {
   };
 
   useEffect(() => {
-    setIssues(issue.issue);
-  }, []);
+    setIssues(tableData);
+  }, [tableData]);
   return (
     <Paper
       elevation={3}

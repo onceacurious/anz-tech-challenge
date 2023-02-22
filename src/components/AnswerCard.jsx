@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
@@ -6,10 +6,13 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import ReactTimeAgo from "react-timeago";
 
-const AnswerCard = () => {
+const AnswerCard = ({ answer }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
   };
+  useEffect(() => {
+    // console.log(_answer);
+  }, []);
   return (
     <Paper
       sx={{
@@ -21,29 +24,14 @@ const AnswerCard = () => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="body1" gutterBottom>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sunt earum
-            obcaecati sed mollitia sapiente delectus quidem labore modi, dolore
-            veritatis excepturi adipisci suscipit nemo id commodi quaerat minima
-            rerum ipsam! Lorem, ipsum dolor sit amet consectetur adipisicing
-            elit. Sunt earum obcaecati sed mollitia sapiente delectus quidem
-            labore modi, dolore veritatis excepturi adipisci suscipit nemo id
-            commodi quaerat minima rerum ipsam!
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sunt earum
-            obcaecati sed mollitia sapiente delectus quidem labore modi, dolore
-            veritatis excepturi adipisci suscipit nemo id commodi quaerat minima
-            rerum ipsam! Lorem, ipsum dolor sit amet consectetur adipisicing
-            elit. Sunt earum obcaecati sed mollitia sapiente delectus quidem
-            labore modi, dolore veritatis excepturi adipisci suscipit nemo id
-            commodi quaerat minima rerum ipsam!
+            {answer.description}
           </Typography>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Typography variant="subtitle1">Author: User_1</Typography>
+          <Typography variant="subtitle1">Author: {answer.author}</Typography>
         </Grid>
         <Grid item xs={12} md={6} sx={{ textAlign: "end" }}>
-          <ReactTimeAgo date={"2023-02-20T12:00:00Z"} />
+          <ReactTimeAgo date={answer.createdDate} />
         </Grid>
         <Grid item xs={12}>
           <Paper
