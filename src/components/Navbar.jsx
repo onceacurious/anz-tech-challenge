@@ -12,7 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 
-const pages = ["Summary", "Real Thing", "Chart"];
+const pages = ["Summary", "Support", "Chart"];
 
 const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -31,7 +31,7 @@ const Navbar = () => {
     if (route == "summary") {
       nav("/");
     } else if (route == "real thing") {
-      nav("real-thing/");
+      nav("support/");
     } else if (route == "chart") {
       nav("graph/");
     } else if (route == "login") {
