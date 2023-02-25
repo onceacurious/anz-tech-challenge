@@ -4,4 +4,3 @@ export { default as Support } from "./Support";
 export { default as Summary } from "./Summary";
 export { default as Register } from "./Register";
 export { default as Dashboard } from "./Dashboard";
-
