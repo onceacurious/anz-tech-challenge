@@ -6,3 +6,4 @@ export { default as IssueCard } from "./IssueCard";
 export { default as RaisedIssue } from "./RaisedIssue";
 export { default as DivisionIssue } from "./DivisionIssue";
 export { default as CopyRight } from "./CopyRight";
+export { default as MyAccordion } from "./MyAccordion";

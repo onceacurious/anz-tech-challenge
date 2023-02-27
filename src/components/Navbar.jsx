@@ -12,7 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 
-const pages = ["Summary", "Support", "Chart"];
+const pages = ["Dashboard", "Summary", "Support", "Chart"];
 
 const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -28,18 +28,23 @@ const Navbar = () => {
   const handleNavigation = (e) => {
     const route = e.target.innerText.toLowerCase();
     if (route == "summary") {
-      nav("/");
+      nav("summary/");
     } else if (route == "support") {
       nav("support/");
     } else if (route == "chart") {
       nav("graph/");
     } else if (route == "login") {
       nav("login/");
+    } else if (route == "dashboard") {
+      nav("/");
     }
   };
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="fixed"
+      sx={{ background: "rgba(2, 0, 115, .90) !important" }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
