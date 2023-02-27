@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -11,6 +11,9 @@ import { styled, alpha } from "@mui/material/styles";
 
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import ReactTimeAgo from "react-timeago";
+
+import data from "../../data.json";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -58,6 +61,8 @@ const StyledMenu = styled((props) => (
 const MyAccordion = () => {
   const [expanded, setExpanded] = useState(false);
   const [relValue, setRelValue] = useState("Filter");
+  const [issues, setIssues] = useState([]);
+  const [division, setDivision] = useState([]);
   const nav = useNavigate();
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -80,6 +85,16 @@ const MyAccordion = () => {
       setRelValue("Filter");
     }
   };
+
+  const divisionTitle = (id) => {
+    return division.find((obj) => obj.divisionId === id);
+  };
+
+  useEffect(() => {
+    setIssues(data.topic);
+    setDivision(data.division);
+    console.log(divisionTitle(5));
+  }, []);
 
   return (
     <>
@@ -137,112 +152,54 @@ const MyAccordion = () => {
           </StyledMenu>
         </div>
       </Box>
+
+      {/* Accordion Here */}
       <div>
-        <Accordion
-          expanded={expanded === "panel1"}
-          onChange={handleChange("panel1")}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1bh-content"
-            id="panel1bh-header"
+        {issues.map((i, x) => (
+          <Accordion
+            key={x}
+            expanded={expanded === "panel1"}
+            onChange={handleChange("panel1")}
           >
-            <Typography sx={{ width: "33%", flexShrink: 0 }}>Admin</Typography>
-            <Typography sx={{ color: "text.secondary", flexGrow: 1 }}>
-              I am an accordion
-            </Typography>
-            <Typography
-              sx={{
-                width: "33%",
-                flexShrink: 0,
-                textAlign: "right",
-                marginRight: "1rem",
-              }}
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
             >
-              01-01-2023
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Nulla facilisi. Phasellus sollicitudin nulla et quam mattis
-              feugiat. Aliquam eget maximus est, id dignissim quam.
-            </Typography>
-            <Link
-              style={{
-                color: "blue",
-                textDecoration: "underline",
-                fontSize: "16px",
-              }}
-            >
-              Open
-            </Link>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion
-          expanded={expanded === "panel2"}
-          onChange={handleChange("panel2")}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel2bh-content"
-            id="panel2bh-header"
-          >
-            <Typography sx={{ width: "33%", flexShrink: 0 }}>Users</Typography>
-            <Typography sx={{ color: "text.secondary" }}>
-              You are currently not an owner
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Donec placerat, lectus sed mattis semper, neque lectus feugiat
-              lectus, varius pulvinar diam eros in elit. Pellentesque convallis
-              laoreet laoreet.
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion
-          expanded={expanded === "panel3"}
-          onChange={handleChange("panel3")}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel3bh-content"
-            id="panel3bh-header"
-          >
-            <Typography sx={{ width: "33%", flexShrink: 0 }}>
-              Advanced settings
-            </Typography>
-            <Typography sx={{ color: "text.secondary" }}>
-              Filtering has been entirely disabled for whole web server
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer
-              sit amet egestas eros, vitae egestas augue. Duis vel est augue.
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion
-          expanded={expanded === "panel4"}
-          onChange={handleChange("panel4")}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel4bh-content"
-            id="panel4bh-header"
-          >
-            <Typography sx={{ width: "33%", flexShrink: 0 }}>
-              Personal data
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer
-              sit amet egestas eros, vitae egestas augue. Duis vel est augue.
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
+              <Typography sx={{ width: "33%", flexShrink: 0 }}>
+                {"Division Mapping not implemented"}
+              </Typography>
+              <Typography sx={{ color: "text.secondary", flexGrow: 1 }}>
+                {i.category}
+              </Typography>
+              <Typography
+                sx={{
+                  width: "33%",
+                  flexShrink: 0,
+                  textAlign: "right",
+                  marginRight: "1rem",
+                }}
+              >
+                {<ReactTimeAgo date={i.createdDate} />}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                Nulla facilisi. Phasellus sollicitudin nulla et quam mattis
+                feugiat. Aliquam eget maximus est, id dignissim quam.
+              </Typography>
+              <Link
+                style={{
+                  color: "blue",
+                  textDecoration: "underline",
+                  fontSize: "16px",
+                }}
+              >
+                Open
+              </Link>
+            </AccordionDetails>
+          </Accordion>
+        ))}
       </div>
     </>
   );
