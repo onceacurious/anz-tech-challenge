@@ -56,7 +56,7 @@ const Admin = () => {
   const [title, setTitle] = useState();
   const titleRef = useRef(null);
 
-  const handleChange = (newValue) => {
+  const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
