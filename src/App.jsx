@@ -234,6 +234,7 @@ const App = () => {
                     justifyContent: open ? "initial" : "center",
                     px: 2.5,
                   }}
+                  disabled
                 >
                   <ListItemIcon
                     sx={{
@@ -319,6 +320,7 @@ const App = () => {
                     justifyContent: open ? "initial" : "center",
                     px: 2.5,
                   }}
+                  disabled
                 >
                   <ListItemIcon
                     sx={{
