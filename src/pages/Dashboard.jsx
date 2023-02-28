@@ -139,7 +139,9 @@ const Dashboard = () => {
             >
               {divisions.map((d, x) => (
                 <Button key={x} onClick={() => handleChangeTopic(d.divisionId)}>
-                  {d.title}
+                  {`${d.title} ${
+                    topic.filter((t) => t.divisionId == d.divisionId).length
+                  }`}
                 </Button>
               ))}
             </ButtonGroup>
