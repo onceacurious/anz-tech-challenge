@@ -49,9 +49,9 @@ const labels = [
   "Nov",
   "Dec",
 ];
-const rawIssues = issues.issue;
-const issuesByMonth = rawIssues.reduce((acc, issue) => {
-  const month = issue.dateraised.slice(0, 2); // extract the month from the date
+const rawIssues = issues.topic;
+const issuesByMonth = rawIssues.reduce((acc, rawIssues) => {
+  const month = rawIssues.createdDate.slice(0, 2); // extract the month from the date
   acc[month] = acc[month] ? acc[month] + 1 : 1; // increment the count for this month
   return acc;
 }, {});

@@ -12,7 +12,7 @@ const AnswerCard = ({ answer, index }) => {
     e.preventDefault();
   };
   useEffect(() => {
-    // console.log(_answer);
+    console.log(answer);
   }, []);
   return (
     <Paper

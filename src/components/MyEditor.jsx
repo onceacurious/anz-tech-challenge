@@ -7,19 +7,14 @@ import htmlToDraft from "html-to-draftjs";
 import ReactHtmlParser from "react-html-parser";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import { Button, Typography } from "@mui/material";
 
 import data from "../../data.json";
 
-const MyEditor = () => {
+const MyEditor = ({ excerpt, buttonTitle }) => {
   const [_id, setId] = useState("");
   const [title, setTitle] = useState("");
-  const [picture, setPicture] = useState("");
   const [content, setContent] = useState("");
-  const [headline, setHeadline] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [text, setText] = useState(data.answer);
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
@@ -30,7 +25,6 @@ const MyEditor = () => {
     const text = convertToRaw(editorState.getCurrentContent());
     const markup = draftToHtml(text);
     setContent(markup);
-    // console.log(content);
   };
 
   const toolbarOptions = {
@@ -105,16 +99,21 @@ const MyEditor = () => {
         autoComplete="off"
         onSubmit={handleSubmit}
         sx={{
-          width: "85%",
+          width: "100%",
           marginInline: "auto",
         }}
       >
+        <Typography variant="body1" gutterBottom>
+          Detail of the question
+        </Typography>
         <Box
           sx={{
             padding: "1rem",
-            marginBlock: "2rem",
-            border: "2px solid #888",
-            boxShadow: "6px 6px 2px #999",
+            marginBottom: "1rem",
+            border: "2px solid rgba(222, 219, 211,.9)",
+            height: "20rem",
+            // boxShadow: "6px 6px 2px #999",
+            background: "rgba(222, 219, 211, .5)",
           }}
         >
           <Editor
@@ -122,75 +121,29 @@ const MyEditor = () => {
             onEditorStateChange={setEditorState}
             toolbar={{ toolbarOptions }}
             placeholder="Enter your text here..."
-            // toolbar={{
-            //   options: [
-            //     "inline",
-            //     "blockType",
-            //     "fontSize",
-            //     "fontFamily",
-            //     "list",
-            //     "textAlign",
-            //     "colorPicker",
-            //     "link",
-            //     "embedded",
-            //     "emoji",
-            //     "image",
-            //     "remove",
-            //     "history",
-            //   ],
-            //   inline: {
-            //     options: [
-            //       "bold",
-            //       "italic",
-            //       "underline",
-            //       "strikethrough",
-            //       "monospace",
-            //     ],
-            //   },
-            //   blockType: {
-            //     options: [
-            //       "Normal",
-            //       "H1",
-            //       "H2",
-            //       "H3",
-            //       "H4",
-            //       "H5",
-            //       "H6",
-            //       "Blockquote",
-            //       "Code",
-            //     ],
-            //   },
-            //   fontSize: {
-            //     options: [
-            //       8, 9, 10, 11, 12, 14, 16, 18, 24, 30, 36, 48, 60, 72, 96,
-            //     ],
-            //   },
-            //   image: {
-            //     icon: Image,
-            //     className: undefined,
-            //     component: undefined,
-            //     popupClassName: undefined,
-            //     urlEnabled: true,
-            //     uploadEnabled: true,
-            //     alignmentEnabled: true,
-            //     uploadCallback: undefined,
-            //     inputAccept:
-            //       "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-            //     alt: { present: false, mandatory: false },
-            //     defaultSize: { height: "auto", width: "auto" },
-            //   },
-            // }}
           />
         </Box>
-        <Button
-          variant="contained"
-          color="success"
-          type="submit"
-          sx={{ marginBottom: "1rem" }}
-        >
-          Post Answer
-        </Button>
-        <div>{ReactHtmlParser(content)}</div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            sx={{
+              marginBottom: "1rem",
+              display: "inline",
+              width: "150px",
+              marginInline: "auto",
+            }}
+          >
+            Submit
+          </Button>
+          <textarea
+            disabled
+            cols="30"
+            rows="10"
+            value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
+          />
+        </div>
       </Box>
     </>
   );

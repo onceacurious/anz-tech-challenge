@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -14,15 +14,24 @@ import {
   Pagination,
   TableContainer,
   TablePagination,
+  Chip,
+  Tooltip,
+  Badge,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import AddTaskIcon from "@mui/icons-material/AddTask";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import UnpublishedIcon from "@mui/icons-material/Unpublished";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import { pink } from "@mui/material/colors";
 import { styled, alpha } from "@mui/material/styles";
 
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import ReactTimeAgo from "react-timeago";
 
+import AppContext from "../helpers/AppContext";
 import data from "../../data.json";
 
 const StyledMenu = styled((props) => (
@@ -71,10 +80,11 @@ const StyledMenu = styled((props) => (
 const MyAccordion = ({ topic }) => {
   const [expanded, setExpanded] = useState(false);
   const [relValue, setRelValue] = useState("Filter");
-  const [issues, setIssues] = useState([]);
-  const [division, setDivision] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(15);
+
+  const [division, setDivision] = useState([]);
+  const { setTopic, setAnswers } = useContext(AppContext);
   const nav = useNavigate();
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -108,13 +118,15 @@ const MyAccordion = ({ topic }) => {
     setPage(newPage);
   };
 
-  const divisionTitle = (id) => {
-    var div = division.find((obj) => obj.divisionId === id);
-    return div?.title;
+  const handleMore = (e) => {
+    nav("support/");
+    setTopic(e);
+
+    var answer = data.answer.filter((a) => a.topicId == e?.id);
+    setAnswers(answer);
   };
 
   useEffect(() => {
-    setIssues(data.topic);
     setDivision(data.division);
   }, []);
 
@@ -130,11 +142,11 @@ const MyAccordion = ({ topic }) => {
       >
         <Button
           size="small"
-          onClick={() => nav("support/")}
+          onClick={() => nav("ask-question/")}
           variant="contained"
-          startIcon={<AddIcon />}
+          startIcon={<AddTaskIcon />}
         >
-          Create
+          Ask Question
         </Button>
         <div>
           <Button
@@ -198,15 +210,57 @@ const MyAccordion = ({ topic }) => {
                   aria-controls={`panel${i.topicId}bh-content`}
                   id={`panel${i.topicId}bh-header`}
                 >
-                  <Typography sx={{ width: "33%", flexShrink: 0 }}>
+                  {i.isClosed == "YES" ? (
+                    <Tooltip title="Closed">
+                      <CheckCircleIcon
+                        color="success"
+                        sx={{ paddingRight: "2px" }}
+                      />
+                    </Tooltip>
+                  ) : (
+                    <>
+                      {i.isOverdue == "YES" ? (
+                        <Tooltip title="Overdue">
+                          <ThumbDownIcon
+                            sx={{ color: pink[500], paddingRight: "2px" }}
+                          />
+                        </Tooltip>
+                      ) : (
+                        ""
+                      )}
+                      <Tooltip title="Open">
+                        <UnpublishedIcon
+                          sx={{ color: pink[500], paddingRight: "2px" }}
+                        />
+                      </Tooltip>
+                    </>
+                  )}
+                  <Typography sx={{ width: "33%", flexGrow: 1 }}>
                     {division.find((x) => x.divisionId == i.divisionId)?.title}
                   </Typography>
-                  <Typography sx={{ color: "text.secondary", flexGrow: 1 }}>
-                    {i.category}
-                  </Typography>
+                  <Badge
+                    title={`${
+                      data.answer.filter((a) => a.topicId == i.topicId).length
+                    } answer`}
+                    badgeContent={
+                      data.answer.filter((a) => a.topicId == i.topicId).length
+                    }
+                    color="primary"
+                  >
+                    <Typography
+                      sx={{
+                        color: "text.secondary",
+                        minWidth: "120px",
+                        textAlign: "right",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {i.category}
+                    </Typography>
+                  </Badge>
                   <Typography
                     sx={{
-                      width: "33%",
+                      width: "40%",
                       flexShrink: 0,
                       textAlign: "right",
                       marginRight: "1rem",
@@ -220,15 +274,17 @@ const MyAccordion = ({ topic }) => {
                     Nulla facilisi. Phasellus sollicitudin nulla et quam mattis
                     feugiat. Aliquam eget maximus est, id dignissim quam.
                   </Typography>
-                  <Link
+                  <p
                     style={{
                       color: "blue",
                       textDecoration: "underline",
                       fontSize: "16px",
+                      cursor: "pointer",
                     }}
+                    onClick={() => handleMore(i)}
                   >
-                    Open
-                  </Link>
+                    more details...
+                  </p>
                 </AccordionDetails>
               </Accordion>
             ))}

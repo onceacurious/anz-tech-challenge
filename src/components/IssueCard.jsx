@@ -10,7 +10,7 @@ import TextField from "@mui/material/TextField";
 
 const IssueCard = () => {
   const [issue, setIssue] = useState([]);
-  const { issues } = useContext(AppContext);
+  const { topic } = useContext(AppContext);
 
   useEffect(() => {}, []);
   const ariaLabel = { "aria-label": "description" };
@@ -21,7 +21,7 @@ const IssueCard = () => {
 
   return (
     <>
-      {issues == null || issues == "undefined" || issues?.length == 0 ? (
+      {topic == null || topic == "undefined" || topic?.length == 0 ? (
         <></>
       ) : (
         <Paper
@@ -29,36 +29,36 @@ const IssueCard = () => {
           sx={{
             marginBlock: "1rem",
             padding: "1rem",
-            background: "rgba(15, 114, 219, .50)",
+            background: "rgba(232, 232, 227, .50)",
           }}
         >
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Chip color="warning" label={`ISSUE ID: ${issues.id}`} />
+              <Chip color="warning" label={`TOPIC ID: ${topic.topicId}`} />
             </Grid>
             <Grid item xs={12}>
               <Typography variant="h5" gutterBottom>
-                {issues.subject?.length == 0 ? "No subject" : issues.subject}
+                {topic.subject?.length == 0 ? "No subject" : topic.subject}
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="body1" gutterBottom>
-                {issues.description?.length == 0
+                {topic.markupText?.length == 0
                   ? "No description"
-                  : issues.description}
+                  : topic.markupText}
               </Typography>
             </Grid>
             <Grid item md={6}>
               <Typography variant="overline" display="block">
-                {issues.division?.toUpperCase()}
+                {topic.divisionId}
               </Typography>
             </Grid>
             <Grid item md={6} sx={{ textAlign: "end" }}>
               <Typography variant="overline" display="block">
-                <ReactTimeAgo date={issues.dateraised} />
+                <ReactTimeAgo date={topic.createdDate} />
               </Typography>
             </Grid>
-            {issues.comment?.length == 0 || issues.comment == null ? (
+            {topic.comment?.length == 0 || topic.comment == null ? (
               <></>
             ) : (
               <Grid item xs={12}>
@@ -72,7 +72,7 @@ const IssueCard = () => {
                   }}
                 >
                   {/* Hard Coded Comment Sample */}
-                  {issues.comment.map((com) => (
+                  {topic.comment.map((com) => (
                     <Grid
                       key={com.id}
                       item

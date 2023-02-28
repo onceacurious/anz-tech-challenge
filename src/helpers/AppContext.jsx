@@ -4,12 +4,12 @@ const AppContext = createContext();
 export default AppContext;
 
 export const AppProvider = ({ children }) => {
-  const [issues, setIssues] = useState([]);
+  const [topic, setTopic] = useState([]);
   const [answers, setAnswers] = useState([]);
 
   const data_context = {
-    issues,
-    setIssues,
+    topic,
+    setTopic,
     answers,
     setAnswers,
   };
