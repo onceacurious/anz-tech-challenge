@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Box, Button, ButtonGroup, Stack, Divider } from "@mui/material";
 
 import { styled, alpha } from "@mui/material/styles";
@@ -7,6 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import { Link } from "react-router-dom";
 import { MyAccordion } from "../components";
+import data from "../../data.json";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -51,6 +52,21 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 }));
 
 const Dashboard = () => {
+  const [divisions, setDivisions] = useState(data.division);
+  const [topic, setTopic] = useState(data.topic);
+
+  const handleChangeTopic = (id) => {
+    var oldTopic = data.topic;
+    var newTopic = oldTopic.filter((t) => t.divisionId == id);
+    setTopic(newTopic);
+  };
+
+  useEffect(() => {
+    setDivisions(
+      [...data.division].sort((a, b) => a.title.localeCompare(b.title))
+    );
+    setTopic(data.topic);
+  }, []);
   return (
     <section style={{ display: "flex", width: "100%", minHeight: "75vh" }}>
       <Grid
@@ -85,10 +101,16 @@ const Dashboard = () => {
               variant="contained"
               aria-label="outlined primary button group"
             >
-              <Button>ALL 500</Button>
-              <Button>CLOSED 70</Button>
-              <Button>OPEN 30</Button>
-              <Button>OVERDUE 15</Button>
+              <Button>ALL {topic.length}</Button>
+              <Button>
+                CLOSED {topic.filter((t) => t.isClosed == "YES").length}
+              </Button>
+              <Button>
+                OPEN {topic.filter((t) => t.isClosed !== "YES").length}
+              </Button>
+              <Button>
+                OVERDUE {topic.filter((t) => t.isOverdue == "YES").length}
+              </Button>
             </ButtonGroup>
           </Box>
         </Grid>
@@ -115,10 +137,11 @@ const Dashboard = () => {
               aria-label="vertical outlined button group"
               sx={{ width: "250px" }}
             >
-              <Button>Admin</Button>
-              <Button>Support</Button>
-              <Button>Customer Service</Button>
-              <Button>Human Resource</Button>
+              {divisions.map((d, x) => (
+                <Button key={x} onClick={() => handleChangeTopic(d.divisionId)}>
+                  {d.title}
+                </Button>
+              ))}
             </ButtonGroup>
 
             <Link
@@ -128,13 +151,14 @@ const Dashboard = () => {
                 color: "blue",
                 paddingBlock: ".5rem",
               }}
-              to="summary/"
+              // to="summary/"
+              onClick={() => setTopic(data.topic)}
             >
               Show all
             </Link>
           </Box>
           <Box sx={{ flexGrow: 1 }}>
-            <MyAccordion />
+            <MyAccordion topic={topic} />
           </Box>
         </Grid>
       </Grid>

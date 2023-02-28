@@ -4,7 +4,17 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Box, Button, MenuItem, Menu, Divider } from "@mui/material";
+import {
+  Box,
+  Button,
+  MenuItem,
+  Menu,
+  Divider,
+  Stack,
+  Pagination,
+  TableContainer,
+  TablePagination,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { styled, alpha } from "@mui/material/styles";
@@ -58,11 +68,13 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-const MyAccordion = () => {
+const MyAccordion = ({ topic }) => {
   const [expanded, setExpanded] = useState(false);
   const [relValue, setRelValue] = useState("Filter");
   const [issues, setIssues] = useState([]);
   const [division, setDivision] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(15);
   const nav = useNavigate();
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -77,7 +89,8 @@ const MyAccordion = () => {
   const handleClose = (e) => {
     setAnchorEl(null);
     const value = e.target.innerText.toLowerCase();
-    if (value.trim() != "" && value.trim() != "clear") {
+    console.log(value);
+    if (value.trim() != "" && value.trim() != "clear filter") {
       setRelValue(e.target.innerText);
     } else if (value.trim() == "clear") {
       setRelValue("Filter");
@@ -86,14 +99,23 @@ const MyAccordion = () => {
     }
   };
 
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
   const divisionTitle = (id) => {
-    return division.find((obj) => obj.divisionId === id);
+    var div = division.find((obj) => obj.divisionId === id);
+    return div?.title;
   };
 
   useEffect(() => {
     setIssues(data.topic);
     setDivision(data.division);
-    console.log(divisionTitle(5));
   }, []);
 
   return (
@@ -154,52 +176,72 @@ const MyAccordion = () => {
       </Box>
 
       {/* Accordion Here */}
-      <div>
-        {issues.map((i, x) => (
-          <Accordion
-            key={x}
-            expanded={expanded === "panel1"}
-            onChange={handleChange("panel1")}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1bh-content"
-              id="panel1bh-header"
-            >
-              <Typography sx={{ width: "33%", flexShrink: 0 }}>
-                {"Division Mapping not implemented"}
-              </Typography>
-              <Typography sx={{ color: "text.secondary", flexGrow: 1 }}>
-                {i.category}
-              </Typography>
-              <Typography
-                sx={{
-                  width: "33%",
-                  flexShrink: 0,
-                  textAlign: "right",
-                  marginRight: "1rem",
-                }}
+      <div
+        style={{
+          borderRadius: "4px",
+          boxShadow: "0 0 2px 2px #999",
+          padding: "4px",
+        }}
+      >
+        <TableContainer sx={{ maxHeight: "67vh" }}>
+          {topic
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((i, x) => (
+              <Accordion
+                key={x}
+                expanded={expanded === `panel${x}`}
+                onChange={handleChange(`panel${x}`)}
               >
-                {<ReactTimeAgo date={i.createdDate} />}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                Nulla facilisi. Phasellus sollicitudin nulla et quam mattis
-                feugiat. Aliquam eget maximus est, id dignissim quam.
-              </Typography>
-              <Link
-                style={{
-                  color: "blue",
-                  textDecoration: "underline",
-                  fontSize: "16px",
-                }}
-              >
-                Open
-              </Link>
-            </AccordionDetails>
-          </Accordion>
-        ))}
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel${x}bh-content`}
+                  id={`panel${x}bh-header`}
+                >
+                  <Typography sx={{ width: "33%", flexShrink: 0 }}>
+                    {division.find((x) => x.divisionId == i.divisionId)?.title}
+                  </Typography>
+                  <Typography sx={{ color: "text.secondary", flexGrow: 1 }}>
+                    {i.category}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      width: "33%",
+                      flexShrink: 0,
+                      textAlign: "right",
+                      marginRight: "1rem",
+                    }}
+                  >
+                    {<ReactTimeAgo date={i.createdDate} />}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>
+                    Nulla facilisi. Phasellus sollicitudin nulla et quam mattis
+                    feugiat. Aliquam eget maximus est, id dignissim quam.
+                  </Typography>
+                  <Link
+                    style={{
+                      color: "blue",
+                      textDecoration: "underline",
+                      fontSize: "16px",
+                    }}
+                  >
+                    Open
+                  </Link>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[15, 25, 50, 100]}
+          component="div"
+          count={topic.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          sx={{ background: "rgba(0,0,0, .10)" }}
+        />
       </div>
     </>
   );
