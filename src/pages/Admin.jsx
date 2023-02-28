@@ -134,14 +134,22 @@ const Admin = () => {
           <Grid item xs={12} md={6} lg={8}>
             <Box sx={{ maxHeight: "500px", overflow: "auto" }}>
               <List sx={style} component="nav" aria-label="mailbox folders">
-                {divisions?.map((d, x) => (
-                  <div key={x}>
-                    <ListItem button onClick={() => console.log()}>
-                      <ListItemText primary={d.title.toUpperCase()} />
-                    </ListItem>
-                    <Divider />
-                  </div>
-                ))}
+                {divisions?.length > 0 &&
+                  divisions?.map((d, x) => (
+                    <div key={x}>
+                      <ListItem button onClick={() => console.log()}>
+                        <ListItemText primary={d.title.toUpperCase()} />
+                      </ListItem>
+                      <Divider />
+                    </div>
+                  ))}
+
+                <div>
+                  <ListItem>
+                    <ListItemText primary="Nothing to display" />
+                  </ListItem>
+                  <Divider />
+                </div>
               </List>
             </Box>
           </Grid>
