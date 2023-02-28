@@ -7,7 +7,15 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-import { Summary, Support, Login, Graph, Register, Dashboard } from "./pages";
+import {
+  Summary,
+  Support,
+  Login,
+  Graph,
+  Register,
+  Dashboard,
+  AskQuestion,
+} from "./pages";
 import { Navbar } from "./components";
 import { AppProvider } from "./helpers/AppContext";
 
@@ -205,8 +213,8 @@ const App = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <Link to="support/" style={{ color: "inherit" }}>
-                      <Tooltip title="Create">
+                    <Link to="ask-question/" style={{ color: "inherit" }}>
+                      <Tooltip title="Ask Question">
                         <CreateIcon />
                       </Tooltip>
                     </Link>
@@ -357,6 +365,7 @@ const App = () => {
               <Route path="login/" element={<Login />} />
               <Route path="register/" element={<Register />} />
               <Route path="support/" element={<Support />} />
+              <Route path="ask-question/" element={<AskQuestion />} />
               <Route path="graph/" element={<Graph />} />
             </Routes>
           </Box>

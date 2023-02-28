@@ -33,11 +33,17 @@ export const options = {
   },
 };
 
-const labels = ["Division 1", "Division 2", "Division 3", "Division 4"];
+const labels = [
+  "Admin",
+  "Human Resource",
+  "Customer Service",
+  "Finance",
+  "Accounting",
+];
 
-const divisionIssue = issues.issue;
+const divisionIssue = issues.topic;
 const division = divisionIssue.reduce((acc, cur) => {
-  acc[cur.division] = acc[cur.division] ? acc[cur.division] + 1 : 1;
+  acc[cur.divisionId] = acc[cur.divisionId] ? acc[cur.divisionId] + 1 : 1;
   return acc;
 }, {});
 export const data = {
@@ -46,10 +52,11 @@ export const data = {
     {
       label: "Issue Per Division",
       data: [
-        division["Division 1"],
-        division["Division 2"],
-        division["Division 3"],
-        division["Division 4"],
+        division["1"],
+        division["2"],
+        division["3"],
+        division["4"],
+        division["5"],
       ],
       backgroundColor: "rgba(13, 6, 183, .70)",
     },
