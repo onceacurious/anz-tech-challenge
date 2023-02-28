@@ -71,7 +71,7 @@ const Dashboard = () => {
     <section style={{ display: "flex", width: "100%", minHeight: "75vh" }}>
       <Grid
         direction="column"
-        justifyContent="center"
+        justifyContent="flex-start"
         alignItems="center"
         container
         spacing={1}
