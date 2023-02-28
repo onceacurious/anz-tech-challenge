@@ -155,6 +155,12 @@ const Admin = () => {
           </Grid>
         </Grid>
       </TabPanel>
+      <TabPanel value={value} index={1} dir={theme.direction}>
+        <h2>Register user</h2>
+      </TabPanel>
+      <TabPanel value={value} index={2} dir={theme.direction}>
+        <h2>Other tab</h2>
+      </TabPanel>
     </Box>
   );
 };
