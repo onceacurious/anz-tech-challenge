@@ -125,6 +125,7 @@ const MyAccordion = ({ topic }) => {
           paddingBlock: ".5rem",
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "start",
         }}
       >
         <Button
@@ -183,7 +184,7 @@ const MyAccordion = ({ topic }) => {
           padding: "4px",
         }}
       >
-        <TableContainer sx={{ maxHeight: "67vh" }}>
+        <TableContainer sx={{ maxHeight: "65vh" }}>
           {topic
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((i, x) => (
