@@ -190,13 +190,13 @@ const MyAccordion = ({ topic }) => {
             .map((i, x) => (
               <Accordion
                 key={x}
-                expanded={expanded === `panel${i}`}
-                onChange={handleChange(`panel${i}`)}
+                expanded={expanded === `panel${i.topicId}`}
+                onChange={handleChange(`panel${i.topicId}`)}
               >
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
-                  aria-controls={`panel${i}bh-content`}
-                  id={`panel${i}bh-header`}
+                  aria-controls={`panel${i.topicId}bh-content`}
+                  id={`panel${i.topicId}bh-header`}
                 >
                   <Typography sx={{ width: "33%", flexShrink: 0 }}>
                     {division.find((x) => x.divisionId == i.divisionId)?.title}
