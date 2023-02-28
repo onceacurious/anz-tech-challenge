@@ -5,3 +5,4 @@ export { default as Summary } from "./Summary";
 export { default as Register } from "./Register";
 export { default as Dashboard } from "./Dashboard";
 export { default as AskQuestion } from "./AskQuestion";
+export { default as Admin } from "./Admin";
