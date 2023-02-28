@@ -15,6 +15,7 @@ import {
   Register,
   Dashboard,
   AskQuestion,
+  Admin,
 } from "./pages";
 import { Navbar } from "./components";
 import { AppProvider } from "./helpers/AppContext";
@@ -42,6 +43,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import CreateIcon from "@mui/icons-material/Create";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 const drawerWidth = 240;
 
@@ -282,7 +284,7 @@ const App = () => {
             </List>
             <Divider />
 
-            {/* TOP LIST ITEM  TO BE IMPLEMENTED*/}
+            {/* BOTTOM LIST ITEM  TO BE IMPLEMENTED*/}
             <List>
               <ListItem disablePadding sx={{ display: "block" }}>
                 <ListItemButton
@@ -292,6 +294,7 @@ const App = () => {
                     px: 2.5,
                   }}
                 >
+                  {/* ADMIN */}
                   <ListItemIcon
                     sx={{
                       minWidth: 0,
@@ -299,12 +302,14 @@ const App = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <Link to="/" style={{ color: "inherit" }}>
-                      <DashboardIcon />
-                    </Link>
+                    <Tooltip title="Admin Panel">
+                      <Link to="admin/" style={{ color: "inherit" }}>
+                        <AdminPanelSettingsIcon />
+                      </Link>
+                    </Tooltip>
                   </ListItemIcon>
                   <ListItemText
-                    primary="Dashboard"
+                    primary="Admin Panel"
                     sx={{ opacity: open ? 1 : 0 }}
                   />
                 </ListItemButton>
@@ -366,6 +371,7 @@ const App = () => {
               <Route path="register/" element={<Register />} />
               <Route path="support/" element={<Support />} />
               <Route path="ask-question/" element={<AskQuestion />} />
+              <Route path="admin/" element={<Admin />} />
               <Route path="graph/" element={<Graph />} />
             </Routes>
           </Box>
