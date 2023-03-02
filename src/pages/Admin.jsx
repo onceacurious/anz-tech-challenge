@@ -1,14 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
-import SwipeableViews from "react-swipeable-views";
 import { useTheme } from "@mui/material/styles";
 import {
   TextField,
   Box,
   Tabs,
   Tab,
-  Typography,
-  AppBar,
   Button,
   Grid,
   Divider,
