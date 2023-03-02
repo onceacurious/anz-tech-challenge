@@ -192,7 +192,8 @@ const MyAccordion = ({ topic }) => {
       <div
         style={{
           borderRadius: "4px",
-          boxShadow: "0 0 2px 2px #999",
+          border: "1px solid #999",
+          // boxShadow: "0 0 2px 2px #999",
           padding: "4px",
         }}
       >
