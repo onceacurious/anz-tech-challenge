@@ -37,6 +37,8 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Tooltip, Button } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 // Icon
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -44,6 +46,12 @@ import SummarizeIcon from "@mui/icons-material/Summarize";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import CreateIcon from "@mui/icons-material/Create";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+
+const dark = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 const drawerWidth = 240;
 
@@ -364,19 +372,23 @@ const App = () => {
               </ListItem>
             </List>
           </Drawer>
-          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-            <DrawerHeader />
-            <Routes>
-              <Route index path="/" element={<Dashboard />} />
-              <Route index path="summary/" element={<Summary />} />
-              <Route path="login/" element={<Login />} />
-              <Route path="register/" element={<Register />} />
-              <Route path="support/" element={<Support />} />
-              <Route path="ask-question/" element={<AskQuestion />} />
-              <Route path="admin/" element={<Admin />} />
-              <Route path="graph/" element={<Graph />} />
-            </Routes>
-          </Box>
+
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+              <DrawerHeader />
+              <Routes>
+                <Route index path="/" element={<Dashboard />} />
+                <Route index path="summary/" element={<Summary />} />
+                <Route path="login/" element={<Login />} />
+                <Route path="register/" element={<Register />} />
+                <Route path="support/" element={<Support />} />
+                <Route path="ask-question/" element={<AskQuestion />} />
+                <Route path="admin/" element={<Admin />} />
+                <Route path="graph/" element={<Graph />} />
+              </Routes>
+            </Box>
+          </ThemeProvider>
         </Router>
       </Box>
     </AppProvider>
