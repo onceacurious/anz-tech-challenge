@@ -84,7 +84,8 @@ export const login_user = async (data) => {
 
 export const logout_user = async (data) => {
   try {
-    const res = await api.put(`/user/logout`);
+    const res = await api.put(`/user/logout/`);
+    return res.data;
   } catch (err) {
     log_error(err);
   }

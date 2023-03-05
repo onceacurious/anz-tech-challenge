@@ -45,6 +45,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 import PrivateRoute from "./helpers/PrivateRoute";
+import { logout_user } from "./helpers/API";
 
 const dark = createTheme({
   palette: {
@@ -130,8 +131,14 @@ const App = () => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+
+  const handleClose = async (e) => {
     setAnchorEl(null);
+    const value = e.target.innerText.toLowerCase();
+    if (value === "logout") {
+      const res = await logout_user();
+      console.log(res);
+    }
   };
 
   const handleDrawerOpen = () => {
