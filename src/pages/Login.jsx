@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -13,18 +13,34 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { CopyRight } from "../components";
 import { Link } from "react-router-dom";
+import { get_user, login_user } from "../helpers/API";
+
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import AppContext from "../helpers/AppContext";
 
 const theme = createTheme();
 
 const Login = () => {
-  const handleSubmit = (event) => {
+  const [access, setAccess] = useState(Cookies.get("access") || "");
+  const { setUsername } = useContext(AppContext);
+  const nav = useNavigate();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    const login = {
       username: data.get("username"),
       password: data.get("password"),
-    });
+    };
+
+    const res = await login_user(login);
+    if (res !== null || res !== "undefined") {
+      nav("/");
+      Cookies.set("access", res);
+    }
   };
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -82,11 +98,10 @@ const Login = () => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link variant="body2">Forgot password?</Link>
-              </Grid>
-              <Grid item>
                 <Link to="/register" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                  {"Forgot password? or Don't have an account?"}
+                  <br />
+                  {"Contact Administrator"}
                 </Link>
               </Grid>
             </Grid>

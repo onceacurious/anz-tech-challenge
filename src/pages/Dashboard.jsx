@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Grid, Box, Button, ButtonGroup, Stack, Divider } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
@@ -6,11 +6,10 @@ import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MyAccordion } from "../components";
 import data from "../../data.json";
-
-
+import AppContext from "../helpers/AppContext";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -57,6 +56,10 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 const Dashboard = () => {
   const [divisions, setDivisions] = useState(data.division);
   const [topic, setTopic] = useState(data.topic);
+
+  const { isAuthenticated, validate_token } = useContext(AppContext);
+
+  const nav = useNavigate();
 
   const handleChangeTopic = (id) => {
     var oldTopic = data.topic;
