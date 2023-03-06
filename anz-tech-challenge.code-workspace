@@ -4,5 +4,10 @@
             "path": "."
         }
     ],
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "settings": {
+        "githubPullRequests.ignoredPullRequestBranches": [
+            "main"
+        ]
+    }
 }
