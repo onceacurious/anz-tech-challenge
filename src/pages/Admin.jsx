@@ -14,6 +14,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { add_division, get_divisions, update_division } from "../helpers/API";
+import { Register } from "../components";
 
 const style = {
   width: "100%",
@@ -131,7 +132,7 @@ const Admin = () => {
           <Grid item xs={12} md={6} lg={8}>
             <Box sx={{ maxHeight: "500px", overflow: "auto" }}>
               <List sx={style} component="nav" aria-label="mailbox folders">
-                {divisions?.length > 0 &&
+                {divisions?.length > 0 ? (
                   divisions?.map((d, x) => (
                     <div key={x}>
                       <ListItem button onClick={() => console.log()}>
@@ -139,14 +140,15 @@ const Admin = () => {
                       </ListItem>
                       <Divider />
                     </div>
-                  ))}
-
-                <div>
-                  <ListItem>
-                    <ListItemText primary="Nothing to display" />
-                  </ListItem>
-                  <Divider />
-                </div>
+                  ))
+                ) : (
+                  <div>
+                    <ListItem>
+                      <ListItemText primary="Nothing to display" />
+                    </ListItem>
+                    <Divider />
+                  </div>
+                )}
               </List>
             </Box>
           </Grid>
@@ -154,6 +156,7 @@ const Admin = () => {
       </TabPanel>
       <TabPanel value={value} index={1} dir={theme.direction}>
         <h2>Register user</h2>
+        <Register />
       </TabPanel>
       <TabPanel value={value} index={2} dir={theme.direction}>
         <h2>Other tab</h2>

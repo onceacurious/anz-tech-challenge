@@ -1,11 +1,5 @@
-import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Link,
-  Route,
-  Routes,
-  useNavigate,
-} from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 
 import {
   Summary,
@@ -17,33 +11,47 @@ import {
   AskQuestion,
   Admin,
 } from "./pages";
-import { Navbar } from "./components";
-import { AppProvider } from "./helpers/AppContext";
+import AppContext from "./helpers/AppContext";
 
 import { styled, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
+import {
+  Box,
+  Menu,
+  MenuItem,
+  Toolbar,
+  List,
+  Tooltip,
+  Button,
+  Typography,
+  Divider,
+  IconButton,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  CssBaseline,
+} from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import { Tooltip, Button } from "@mui/material";
-
 // Icon
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import CreateIcon from "@mui/icons-material/Create";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+
+import PrivateRoute from "./helpers/PrivateRoute";
+import { logout_user } from "./helpers/API";
+
+const dark = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 const drawerWidth = 240;
 
@@ -114,7 +122,24 @@ const Drawer = styled(MuiDrawer, {
 
 const App = () => {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const { isAuthenticated, validate_token, username } = useContext(AppContext);
+
+  const openMenu = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = async (e) => {
+    setAnchorEl(null);
+    const value = e.target.innerText.toLowerCase();
+    if (value === "logout") {
+      const res = await logout_user();
+      console.log(res);
+    }
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -123,263 +148,331 @@ const App = () => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  useEffect(() => {
+    validate_token();
+  }, []);
   return (
-    <AppProvider>
-      <Box sx={{ display: "flex" }}>
-        <Router>
-          <AppBar
-            position="fixed"
-            open={open}
-            sx={{ background: "rgba(1, 0, 89, .90)" }}
-          >
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                edge="start"
-                sx={{
-                  marginRight: 5,
+    <Box sx={{ display: "flex" }}>
+      <Router>
+        <AppBar
+          position="fixed"
+          open={open}
+          sx={{ background: "rgba(1, 0, 89, .90)" }}
+        >
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{
+                marginRight: 5,
 
-                  ...(open && { display: "none" }),
-                }}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                ANZ Internal Audit
-              </Typography>
+                ...(open && { display: "none" }),
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              ANZ Internal Audit
+            </Typography>
+
+            {isAuthenticated ? (
+              <div>
+                <Button
+                  id="basic-button"
+                  aria-controls={openMenu ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openMenu ? "true" : undefined}
+                  onClick={handleClick}
+                >
+                  {username}
+                </Button>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={openMenu}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                >
+                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={handleClose}>Logout</MenuItem>
+                </Menu>
+              </div>
+            ) : (
               <Link to="login/" style={{ color: "inherit" }}>
                 <Button color="inherit">Login</Button>
               </Link>
-            </Toolbar>
-          </AppBar>
-          <Drawer
-            variant="permanent"
-            open={open}
-            sx={{ background: "rgba(0,0,0,.90) !important" }}
-          >
-            <DrawerHeader>
-              <IconButton onClick={handleDrawerClose}>
-                {theme.direction === "rtl" ? (
-                  <ChevronRightIcon />
-                ) : (
-                  <ChevronLeftIcon />
-                )}
-              </IconButton>
-            </DrawerHeader>
-            <Divider />
+            )}
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          open={open}
+          sx={{ background: "rgba(0,0,0,.90) !important" }}
+        >
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
 
-            {/* TOP LIST ITEM */}
-            <List>
-              <ListItem disablePadding sx={{ display: "block" }}>
-                {/* DASHBOARD */}
-                <ListItemButton
+          {/* TOP LIST ITEM */}
+          <List>
+            <ListItem disablePadding sx={{ display: "block" }}>
+              {/* DASHBOARD */}
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
                   sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
                   }}
                 >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Link to="/" style={{ color: "inherit" }}>
-                      <Tooltip title="Dashboard">
-                        <DashboardIcon />
-                      </Tooltip>
-                    </Link>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Dashboard"
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
-
-                {/* CREATE */}
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Link to="ask-question/" style={{ color: "inherit" }}>
-                      <Tooltip title="Ask Question">
-                        <CreateIcon />
-                      </Tooltip>
-                    </Link>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Graph"
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
-
-                {/* SUMMARY */}
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                  disabled
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Link to="summary/" style={{ color: "inherit" }}>
-                      <Tooltip title="Summary">
-                        <SummarizeIcon />
-                      </Tooltip>
-                    </Link>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Summary"
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
-
-                {/* GRAPH */}
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Link to="graph/" style={{ color: "inherit" }}>
-                      <Tooltip title="Graph">
-                        <TimelineIcon />
-                      </Tooltip>
-                    </Link>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Graph"
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            </List>
-            <Divider />
-
-            {/* BOTTOM LIST ITEM  TO BE IMPLEMENTED*/}
-            <List>
-              <ListItem disablePadding sx={{ display: "block" }}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  {/* ADMIN */}
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Tooltip title="Admin Panel">
-                      <Link to="admin/" style={{ color: "inherit" }}>
-                        <AdminPanelSettingsIcon />
-                      </Link>
+                  <Link to="/" style={{ color: "inherit" }}>
+                    <Tooltip title="Dashboard">
+                      <DashboardIcon />
                     </Tooltip>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Admin Panel"
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
-                <ListItemButton
+                  </Link>
+                </ListItemIcon>
+                <ListItemText
+                  primary="Dashboard"
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+
+              {/* CREATE */}
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
                   sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
                   }}
-                  disabled
                 >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Link to="summary/" style={{ color: "inherit" }}>
+                  <Link to="ask-question/" style={{ color: "inherit" }}>
+                    <Tooltip title="Ask Question">
+                      <CreateIcon />
+                    </Tooltip>
+                  </Link>
+                </ListItemIcon>
+                <ListItemText primary="Graph" sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+
+              {/* SUMMARY */}
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+                disabled
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Link to="summary/" style={{ color: "inherit" }}>
+                    <Tooltip title="Summary">
                       <SummarizeIcon />
-                    </Link>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Summary"
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
-                <ListItemButton
+                    </Tooltip>
+                  </Link>
+                </ListItemIcon>
+                <ListItemText
+                  primary="Summary"
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+
+              {/* GRAPH */}
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
                   sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
                   }}
                 >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Link to="graph/" style={{ color: "inherit" }}>
+                  <Link to="graph/" style={{ color: "inherit" }}>
+                    <Tooltip title="Graph">
                       <TimelineIcon />
+                    </Tooltip>
+                  </Link>
+                </ListItemIcon>
+                <ListItemText primary="Graph" sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          </List>
+          <Divider />
+
+          {/* BOTTOM LIST ITEM  TO BE IMPLEMENTED*/}
+          <List>
+            <ListItem disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                {/* ADMIN */}
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Tooltip title="Admin Panel">
+                    <Link to="admin/" style={{ color: "inherit" }}>
+                      <AdminPanelSettingsIcon />
                     </Link>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Graph"
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            </List>
-          </Drawer>
+                  </Tooltip>
+                </ListItemIcon>
+                <ListItemText
+                  primary="Admin Panel"
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+                disabled
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Link to="summary/" style={{ color: "inherit" }}>
+                    <SummarizeIcon />
+                  </Link>
+                </ListItemIcon>
+                <ListItemText
+                  primary="Summary"
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Link to="graph/" style={{ color: "inherit" }}>
+                    <TimelineIcon />
+                  </Link>
+                </ListItemIcon>
+                <ListItemText primary="Graph" sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          </List>
+        </Drawer>
+
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
           <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
             <DrawerHeader />
             <Routes>
-              <Route index path="/" element={<Dashboard />} />
-              <Route index path="summary/" element={<Summary />} />
+              <Route
+                index
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <Dashboard />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                index
+                path="summary/"
+                element={
+                  <PrivateRoute>
+                    <Summary />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="support/"
+                element={
+                  <PrivateRoute>
+                    <Support />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="ask-question/"
+                element={
+                  <PrivateRoute>
+                    <AskQuestion />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="admin/"
+                element={
+                  <PrivateRoute>
+                    <Admin />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="graph/"
+                element={
+                  <PrivateRoute>
+                    <Graph />
+                  </PrivateRoute>
+                }
+              />
               <Route path="login/" element={<Login />} />
               <Route path="register/" element={<Register />} />
-              <Route path="support/" element={<Support />} />
-              <Route path="ask-question/" element={<AskQuestion />} />
-              <Route path="admin/" element={<Admin />} />
-              <Route path="graph/" element={<Graph />} />
             </Routes>
           </Box>
-        </Router>
-      </Box>
-    </AppProvider>
+        </ThemeProvider>
+      </Router>
+    </Box>
   );
 };
 
